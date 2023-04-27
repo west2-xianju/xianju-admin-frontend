@@ -6,7 +6,7 @@ export default [
     name: 'result',
     component: Layout,
     redirect: '/result/success',
-    meta: { title: '结果页', icon: 'check-circle' },
+    meta: { hidden: true, title: '结果页', icon: 'check-circle' },
     children: [
       {
         path: 'success',

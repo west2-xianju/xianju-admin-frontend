@@ -9,7 +9,7 @@ export default [
     name: 'user',
     component: Layout,
     redirect: '/user/index',
-    meta: { title: '个人页', icon: 'user-circle' },
+    meta: { hidden: true, title: '个人页', icon: 'user-circle' },
     children: [
       {
         path: 'index',

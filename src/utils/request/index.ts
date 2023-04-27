@@ -2,6 +2,7 @@
 import type { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import isString from 'lodash/isString';
 import merge from 'lodash/merge';
+import { MessagePlugin } from 'tdesign-vue-next';
 
 import { TOKEN_NAME } from '@/config/global';
 import { ContentTypeEnum } from '@/constants';
@@ -41,6 +42,7 @@ const transform: AxiosTransform = {
     // 错误的时候返回
     const { data } = res;
     if (!data) {
+      MessagePlugin.error('请求接口错误');
       throw new Error('请求接口错误');
     }
 
@@ -48,11 +50,12 @@ const transform: AxiosTransform = {
     const { code } = data;
 
     // 这里逻辑可以根据项目进行修改
-    const hasSuccess = data && code === 0;
+    const hasSuccess = data && code === 200;
     if (hasSuccess) {
       return data.data;
     }
 
+    MessagePlugin.error(`请求接口错误 ${code}: ${data.message}`);
     throw new Error(`请求接口错误, 错误码: ${code}`);
   },
 
@@ -156,7 +159,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
       <CreateAxiosOptions>{
         // https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#authentication_schemes
         // 例如: authenticationScheme: 'Bearer'
-        authenticationScheme: '',
+        authenticationScheme: 'Bearer',
         // 超时
         timeout: 10 * 1000,
         // 携带Cookie
