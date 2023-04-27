@@ -92,6 +92,17 @@
         <template #op="slotProps">
           <a class="t-button-link" @click="rehandleClickOp(slotProps)">管理</a>
           <a class="t-button-link" @click="handleClickDelete(slotProps)">删除</a>
+          <t-popconfirm
+            destroy-on-close
+            show-arrow
+            placement="left"
+            theme="danger"
+            content="确认删除吗"
+            @visible-change="popMessage"
+          >
+            <!-- <t-button @click="handleClickDelete(slotProps)">删除</t-button> -->
+            <t-button>删除</t-button>
+          </t-popconfirm>
         </template>
       </t-table>
       <t-dialog
@@ -232,6 +243,23 @@ const onCancel = () => {
 onMounted(() => {
   fetchData();
 });
+
+const visible = ref(false);
+
+const popMessage = (val, context = {}) => {
+  if (context && context.trigger === 'confirm') {
+    MessagePlugin.success('hi');
+    // const msg = MessagePlugin.success('hi');
+    // const timer = setTimeout(() => {
+    //   MessagePlugin.close(msg);
+    //   MessagePlugin.success('提交成功！');
+    //   visible.value = false;
+    //   clearTimeout(timer);
+    // }, 1000);
+  } else {
+    visible.value = val;
+  }
+};
 
 const handleClickDelete = ({ row }) => {
   deleteIdx.value = row.rowIndex;
