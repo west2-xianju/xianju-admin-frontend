@@ -51,7 +51,8 @@ router.beforeEach(async (to, from, next) => {
         next(`/`);
       }
     } catch (error) {
-      MessagePlugin.error(error);
+      MessagePlugin.error('登录态失效, 重定向至登录页');
+      // MessagePlugin.error(error);
       next({
         path: '/login',
         query: { redirect: encodeURIComponent(to.fullPath) },

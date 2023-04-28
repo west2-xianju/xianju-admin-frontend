@@ -2,8 +2,8 @@
 import type { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import isString from 'lodash/isString';
 import merge from 'lodash/merge';
-import { MessagePlugin } from 'tdesign-vue-next';
 
+// import { MessagePlugin } from 'tdesign-vue-next';
 import { TOKEN_NAME } from '@/config/global';
 import { ContentTypeEnum } from '@/constants';
 
@@ -42,7 +42,7 @@ const transform: AxiosTransform = {
     // 错误的时候返回
     const { data } = res;
     if (!data) {
-      MessagePlugin.error('请求接口错误');
+      // MessagePlugin.error('请求接口错误');
       throw new Error('请求接口错误');
     }
 
@@ -55,8 +55,8 @@ const transform: AxiosTransform = {
       return data.data;
     }
 
-    MessagePlugin.error(`请求接口错误 ${code}: ${data.message}`);
-    throw new Error(`请求接口错误, 错误码: ${code}`);
+    // MessagePlugin.error(`请求接口错误 ${code}: ${data.message}`);
+    throw new Error(`请求接口错误, 错误码: ${code}, ${data.message}`);
   },
 
   // 请求前处理配置

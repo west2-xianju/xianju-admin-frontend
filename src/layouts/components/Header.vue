@@ -21,7 +21,7 @@
           <search v-if="layout !== 'side'" :layout="layout" />
 
           <!-- 全局通知 -->
-          <notice />
+          <!-- <notice /> -->
 
           <t-tooltip placement="bottom" content="代码仓库">
             <t-button theme="default" shape="square" variant="text" @click="navToGitHub">
@@ -48,7 +48,7 @@
               <template #icon>
                 <t-icon class="header-user-avatar" name="user-circle" />
               </template>
-              <div class="header-user-account">Tencent</div>
+              <div class="header-user-account">{{ usernameDisplay }}</div>
               <template #suffix><t-icon name="chevron-down" /></template>
             </t-button>
           </t-dropdown>
@@ -65,7 +65,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import LogoFull from '@/assets/assets-logo-full.svg?component';
@@ -75,8 +75,11 @@ import { useSettingStore } from '@/store';
 import type { MenuRoute } from '@/types/interface';
 
 import MenuContent from './MenuContent.vue';
-import Notice from './Notice.vue';
+// import Notice from './Notice.vue';
 import Search from './Search.vue';
+
+const usernameDisplay = ref('fail to fetch');
+usernameDisplay.value = localStorage.getItem('username') || 'error';
 
 const props = defineProps({
   theme: {
@@ -152,11 +155,11 @@ const handleLogout = () => {
 };
 
 const navToGitHub = () => {
-  window.open('https://github.com/tencent/tdesign-vue-next-starter');
+  window.open('https://github.com/zenor0/xianju-admin-frontend/');
 };
 
 const navToHelper = () => {
-  window.open('http://tdesign.tencent.com/starter/docs/get-started');
+  window.open('https://www.apifox.cn/apidoc/shared-75b228ec-c55b-4115-84c1-9dbcdb11ed5b');
 };
 </script>
 <style lang="less" scoped>

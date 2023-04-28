@@ -5,6 +5,7 @@ import { TOKEN_NAME } from '@/config/global';
 import { store, usePermissionStore } from '@/store';
 
 const InitUserInfo = {
+  username: '',
   roles: [], // 前端权限模型使用 如果使用请配置modules/permission-fe.ts使用
 };
 
@@ -79,7 +80,7 @@ export const useUserStore = defineStore('user', {
       // };
       const res = await getUserRole({ token: this.token });
       // const res = await mockRemoteUserInfo(this.token);
-
+      localStorage.setItem('username', res.username);
       this.userInfo = res;
     },
     async logout() {
