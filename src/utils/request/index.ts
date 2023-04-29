@@ -28,6 +28,11 @@ const transform: AxiosTransform = {
     if (res.status === 204 || method === 'put' || method === 'patch') {
       return res;
     }
+    console.log(res.status);
+
+    if (res.status === 401) {
+      throw new Error(`登录态失效`);
+    }
 
     // 是否返回原生响应头 比如：需要获取响应头时使用该属性
     if (isReturnNativeResponse) {

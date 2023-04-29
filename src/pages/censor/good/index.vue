@@ -139,7 +139,11 @@ const COLUMNS: PrimaryTableCol<TableRowData>[] = [
     width: 80,
     filter: {
       type: 'single',
-      list: [{ label: '待审核', value: 'pending' }],
+      list: [
+        { label: '待审核', value: 'pending' },
+        { label: '已发布', value: 'released' },
+        { label: '已锁定', value: 'locked' },
+      ],
     },
     colKey: 'state',
   },
