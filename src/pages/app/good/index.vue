@@ -1,5 +1,4 @@
 <template>
-  <div>selectedRowKeys: {{ selectedRowKeys }}</div>
   <div class="list-common-table">
     <t-row justify="space-between" class="form-basic-item">
       <div>
@@ -34,7 +33,6 @@
         :vertical-align="verticalAlign"
         :filter-value="filterValue"
         :hover="hover"
-        :sort="sortValue"
         :pagination="pagination"
         :loading="dataLoading"
         :header-affixed-top="headerAffixedTop"
@@ -274,18 +272,6 @@ const selectedRowKeys = ref([]);
 const pageValue = ref({ page: pagination.value.defaultCurrent, limit: pagination.value.defaultPageSize });
 
 const filterValue = ref({ register_time: [] });
-// const searchForm = {
-//   good_id: '',
-//   seller_id: '',
-//   state: '',
-//   game: '',
-//   title: '',
-//   price: '',
-//   detail: '',
-//   page: pagination.value.defaultCurrent,
-//   limit: pagination.value.defaultPageSize,
-// };
-// const formData = ref({ ...searchForm });
 const tableData = ref([]);
 
 // define apis
@@ -303,7 +289,7 @@ import { deleteGood, getGoodList, hideGood } from '@/api/app/good';
 //   }
 // };
 
-const hideItem = async (row) => {
+const hideItem = async (row: TableRowData) => {
   try {
     await hideGood(row.uid);
     fetchData();
@@ -315,7 +301,7 @@ const hideItem = async (row) => {
   }
 };
 
-const deleteItem = async (row) => {
+const deleteItem = async (row: TableRowData) => {
   try {
     await deleteGood(row.uid);
     fetchData();
@@ -358,7 +344,6 @@ onMounted(() => {
 const rehandlePageChange = (pageInfo: PageInfo, newDataSource: TableRowData[]) => {
   pageValue.value.page = pageInfo.current;
   pageValue.value.limit = pageInfo.pageSize;
-  // console.log(formData);
   fetchData();
   console.log('分页变化', pageInfo, newDataSource);
 };
@@ -369,7 +354,6 @@ const rehandleChange = (changeParams, triggerAndData) => {
 const rehandleSortChange = (val) => {
   sortValue.value.order_by = val.sortBy;
   sortValue.value.order = val.descending === true ? 'desc' : 'asc';
-  console.log(formData);
 
   fetchData();
 };

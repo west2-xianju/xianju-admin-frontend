@@ -2,29 +2,37 @@
   <div class="list-common-table">
     <t-row justify="space-between" class="form-basic-item">
       <div>
-        <t-button theme="primary" @click="onAddUser">
-          <template #icon><add-icon /></template>
-          新建货物
-        </t-button>
-        <t-button theme="default" variant="outline" @click="onRefreshList"
+        <t-button theme="primary" @click="onRefreshList"
           ><template #icon><refresh-icon /></template>
           刷新列表
+        </t-button>
+      </div>
+      <div>
+        <t-button theme="danger" variant="outline" @click="onBunchOperation(censorGood, 'allow')">
+          <template #icon><check-icon /></template>
+          批量通过
+        </t-button>
+        <t-button theme="warning" variant="outline" @click="onBunchOperation(censorGood, 'reject')"
+          ><template #icon><close-icon /></template>
+          批量拒绝
         </t-button>
       </div>
     </t-row>
 
     <div class="table-container">
       <t-table
+        :selected-row-keys="selectedRowKeys"
         :data="tableData"
         :columns="COLUMNS"
         :row-key="rowKey"
         :vertical-align="verticalAlign"
         :filter-value="filterValue"
         :hover="hover"
-        :sort="sort"
+        :sort="sortValue"
         :pagination="pagination"
         :loading="dataLoading"
         :header-affixed-top="headerAffixedTop"
+        @select-change="rehandleSelectChange"
         @sort-change="rehandleSortChange"
         @page-change="rehandlePageChange"
         @filter-change="rehandleFilterChange"
@@ -65,12 +73,11 @@
   </div>
 </template>
 <script setup lang="ts">
-import { AddIcon, CheckIcon, CloseIcon, RefreshIcon } from 'tdesign-icons-vue-next';
+import { CheckIcon, CloseIcon, RefreshIcon } from 'tdesign-icons-vue-next';
 import { MessagePlugin, PageInfo, PrimaryTableCol, TableRowData } from 'tdesign-vue-next';
 import { computed, onMounted, ref } from 'vue';
-// import Trend from '@/components/trend/index.vue';
-import { useRouter } from 'vue-router';
 
+// import Trend from '@/components/trend/index.vue';
 import { prefix } from '@/config/global';
 import { useSettingStore } from '@/store';
 
@@ -81,10 +88,15 @@ const hover = true;
 
 const COLUMNS: PrimaryTableCol<TableRowData>[] = [
   {
+    colKey: 'row-select',
+    type: 'multiple',
+    width: 50,
+  },
+  {
     title: '货物ID',
     // sorter: true,
     fixed: 'left',
-    width: 100,
+    width: 70,
     ellipsis: true,
     filter: {
       type: 'input',
@@ -102,7 +114,7 @@ const COLUMNS: PrimaryTableCol<TableRowData>[] = [
   {
     title: '卖家ID',
     // sorter: true,
-    width: 100,
+    width: 70,
     filter: {
       type: 'input',
       resetValue: '',
@@ -119,7 +131,7 @@ const COLUMNS: PrimaryTableCol<TableRowData>[] = [
   },
   {
     title: '标题',
-    width: 160,
+    width: 200,
     filter: {
       type: 'input',
       resetValue: '',
@@ -137,15 +149,8 @@ const COLUMNS: PrimaryTableCol<TableRowData>[] = [
   {
     title: '状态',
     width: 80,
-    filter: {
-      type: 'single',
-      list: [
-        { label: '待审核', value: 'pending' },
-        { label: '已发布', value: 'released' },
-        { label: '已锁定', value: 'locked' },
-      ],
-    },
     colKey: 'state',
+    align: 'center',
   },
   {
     title: '游戏',
@@ -204,25 +209,21 @@ const pagination = ref({
   defaultCurrent: 1,
   total: 0,
 });
-const searchForm = {
-  good_id: '',
-  seller_id: '',
-  state: 'pending',
-  game: '',
-  title: '',
-  price: '',
-  detail: '',
-  page: pagination.value.defaultCurrent,
-  limit: pagination.value.defaultPageSize,
-};
-const formData = ref({ ...searchForm });
-const tableData = ref([]);
 
+const sortValue = ref({
+  order_by: '',
+  order: '',
+});
+const selectedRowKeys = ref([]);
+const pageValue = ref({ page: pagination.value.defaultCurrent, limit: pagination.value.defaultPageSize });
+
+const filterValue = ref({ register_time: [] });
+const tableData = ref([]);
 // define apis
 
 import { censorGood, getGoodList } from '@/api/app/good';
 
-const opItem = async (row, op) => {
+const opItem = async (row, op: string) => {
   try {
     await censorGood(row.uid, op);
     fetchData();
@@ -237,9 +238,14 @@ const opItem = async (row, op) => {
 const dataLoading = ref(false);
 const fetchData = async () => {
   dataLoading.value = true;
+  const queryValue = {
+    ...filterValue.value,
+    ...pageValue.value,
+    ...sortValue.value,
+    state: 'pending',
+  };
   try {
-    formData.value.state = 'pending';
-    tableData.value = await getGoodList(formData.value).then((res) => {
+    tableData.value = await getGoodList(queryValue).then((res) => {
       pagination.value = {
         ...pagination.value,
         total: res.count,
@@ -259,9 +265,8 @@ onMounted(() => {
 });
 
 const rehandlePageChange = (pageInfo: PageInfo, newDataSource: TableRowData[]) => {
-  formData.value.page = pageInfo.current;
-  formData.value.limit = pageInfo.pageSize;
-  console.log(formData);
+  pageValue.value.page = pageInfo.current;
+  pageValue.value.limit = pageInfo.pageSize;
   fetchData();
   console.log('分页变化', pageInfo, newDataSource);
 };
@@ -269,49 +274,46 @@ const rehandleChange = (changeParams, triggerAndData) => {
   console.log('统一Change', changeParams, triggerAndData);
 };
 
-const filterValue = ref({ register_time: [] });
-
-const sort = ref({
-  order_by: '',
-  order: '',
-});
-
 const rehandleSortChange = (val) => {
-  // console.log('sort change');
-  sort.value.order_by = val.sortBy;
-  sort.value.order = val.descending === true ? 'desc' : 'asc';
-  formData.value = {
-    ...formData.value,
-    ...filterValue.value,
-    ...sort.value,
-  };
-  console.log(formData);
-  // request(filters);
+  sortValue.value.order_by = val.sortBy;
+  sortValue.value.order = val.descending === true ? 'desc' : 'asc';
+
   fetchData();
 };
-
+const rehandleSelectChange = (row) => {
+  selectedRowKeys.value = row;
+  console.log('统一Select', row);
+};
 const rehandleFilterChange = async (filters) => {
   filterValue.value = {
     ...filters,
+    ...sortValue.value,
     createTime: filters.createTime || [],
   };
 
-  formData.value = {
-    ...formData.value,
-    ...filterValue.value,
-    ...sort.value,
-    createTime: filters.createTime || [],
-  };
   try {
     fetchData();
   } catch (e) {
     console.log(e);
   } finally {
     MessagePlugin.info('查询成功');
-    formData.value = { ...searchForm.value };
   }
 };
 
+const onBunchOperation = async (opFunction, args) => {
+  try {
+    selectedRowKeys.value.forEach(async (item) => {
+      await opFunction(item, args);
+    });
+    fetchData();
+    // console.log(data);
+  } catch (e) {
+    console.log(e);
+  } finally {
+    MessagePlugin.info('批量操作成功');
+    selectedRowKeys.value = [];
+  }
+};
 const onRefreshList = () => {
   try {
     fetchData();
@@ -321,12 +323,6 @@ const onRefreshList = () => {
     MessagePlugin.success('刷新成功');
   }
 };
-
-const router = useRouter();
-const onAddUser = () => {
-  router.push('/app/user/create');
-};
-
 const headerAffixedTop = computed(
   () =>
     ({
