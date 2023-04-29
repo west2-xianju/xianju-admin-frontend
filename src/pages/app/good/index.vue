@@ -4,7 +4,7 @@
       <div>
         <t-button theme="primary" @click="onAddUser">
           <template #icon><add-icon /></template>
-          新建用户
+          新建货物
         </t-button>
         <t-button theme="default" variant="outline" @click="onRefreshList"
           ><template #icon><refresh-icon /></template>
@@ -30,9 +30,12 @@
         @filter-change="rehandleFilterChange"
         @change="rehandleChange"
       >
-        <template #blocked="{ row }">
-          <t-tag v-if="row.blocked === true" theme="danger" variant="light"> 已冻结 </t-tag>
-          <t-tag v-if="row.blocked === false" theme="success" variant="light"> 正常 </t-tag>
+        <template #state="{ row }">
+          <t-tag v-if="row.state === 'pending'" theme="primary" variant="light"> 待审核 </t-tag>
+          <t-tag v-if="row.state === 'released'" theme="success" variant="light"> 已发布 </t-tag>
+          <t-tag v-if="row.state === 'locked'" theme="danger" variant="light"> 已锁定 </t-tag>
+          <t-tag v-if="row.state === 'sold'" theme="warning" variant="light"> 已售出 </t-tag>
+          <t-tag v-if="row.state === 'canceled'" theme="default" variant="light"> 已取消 </t-tag>
         </template>
 
         <template #op="{ row }">
@@ -53,8 +56,8 @@
             ></t-button>
           </t-popconfirm>
 
-          <t-button shape="rectangle" variant="base" theme="danger" @click="swapBlockedStatus(row)">
-            <template #icon> <swap-icon /></template>
+          <t-button shape="rectangle" variant="base" theme="danger" @click="hideItem(row)">
+            <template #icon> <lock-on-icon /></template>
           </t-button>
 
           <!-- dynamic change button code -->
@@ -75,7 +78,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { AddIcon, DeleteIcon, EditIcon, RefreshIcon, SwapIcon } from 'tdesign-icons-vue-next';
+import { AddIcon, DeleteIcon, EditIcon, LockOnIcon, RefreshIcon } from 'tdesign-icons-vue-next';
 import { DateRangePickerPanel, MessagePlugin, PageInfo, PrimaryTableCol, TableRowData } from 'tdesign-vue-next';
 import { computed, onMounted, ref } from 'vue';
 // import Trend from '@/components/trend/index.vue';
@@ -91,8 +94,8 @@ const hover = true;
 
 const COLUMNS: PrimaryTableCol<TableRowData>[] = [
   {
-    title: '用户ID',
-    sorter: true,
+    title: '货物ID',
+    // sorter: true,
     fixed: 'left',
     width: 100,
     ellipsis: true,
@@ -106,13 +109,13 @@ const COLUMNS: PrimaryTableCol<TableRowData>[] = [
       // 是否显示重置取消按钮，一般情况不需要显示
       showConfirmAndReset: true,
     },
-    align: 'center',
+    align: 'left',
     colKey: 'uid',
   },
   {
-    title: '用户名',
-    sorter: true,
-    width: 200,
+    title: '卖家ID',
+    // sorter: true,
+    width: 100,
     filter: {
       type: 'input',
       resetValue: '',
@@ -125,29 +128,36 @@ const COLUMNS: PrimaryTableCol<TableRowData>[] = [
     },
     ellipsis: true,
     align: 'left',
-    colKey: 'username',
+    colKey: 'seller_id',
   },
-  // {
-  //   title: '头像',
-  //   width: 280,
-  //   ellipsis: true,
-  //   align: 'left',
-  //   colKey: 'profile',
-  // },
+  {
+    title: '标题',
+    width: 160,
+    filter: {
+      type: 'input',
+      resetValue: '',
+      confirmEvents: ['onEnter'],
+      props: {
+        placeholder: '输入关键词过滤',
+      },
+      // 是否显示重置取消按钮，一般情况不需要显示
+      showConfirmAndReset: true,
+    },
+    ellipsis: true,
+    align: 'left',
+    colKey: 'title',
+  },
   {
     title: '状态',
     width: 100,
     filter: {
       type: 'single',
-      list: [
-        { label: '已冻结', value: true },
-        { label: '正常', value: false },
-      ],
+      list: [{ label: '待审核', value: 'pending' }],
     },
-    colKey: 'blocked',
+    colKey: 'state',
   },
   {
-    title: '昵称',
+    title: '游戏',
     width: 160,
     filter: {
       type: 'input',
@@ -161,10 +171,11 @@ const COLUMNS: PrimaryTableCol<TableRowData>[] = [
     },
     ellipsis: true,
     align: 'left',
-    colKey: 'nickname',
+    colKey: 'game',
   },
+
   {
-    title: '邮箱',
+    title: '详细内容',
     width: 160,
     filter: {
       type: 'input',
@@ -178,10 +189,10 @@ const COLUMNS: PrimaryTableCol<TableRowData>[] = [
     },
     ellipsis: true,
     align: 'left',
-    colKey: 'email',
+    colKey: 'detail',
   },
   {
-    title: '真实姓名',
+    title: '价格',
     width: 160,
     filter: {
       type: 'input',
@@ -194,29 +205,12 @@ const COLUMNS: PrimaryTableCol<TableRowData>[] = [
       showConfirmAndReset: true,
     },
     ellipsis: true,
-    align: 'left',
-    colKey: 'realname',
+    align: 'center',
+    colKey: 'price',
   },
   {
-    title: '身份证号',
-    width: 160,
-    filter: {
-      type: 'input',
-      resetValue: '',
-      confirmEvents: ['onEnter'],
-      props: {
-        placeholder: '输入关键词过滤',
-      },
-      // 是否显示重置取消按钮，一般情况不需要显示
-      showConfirmAndReset: true,
-    },
-    ellipsis: true,
-    align: 'left',
-    colKey: 'id_number',
-  },
-  {
-    title: '注册时间',
-    colKey: 'register_time',
+    title: '发布时间',
+    colKey: 'publish_time',
     // width: 160,
     sorter: true,
     filter: {
@@ -246,13 +240,13 @@ const pagination = ref({
   total: 0,
 });
 const searchForm = {
-  user_id: '',
-  username: '',
-  nickname: '',
-  email: '',
-  blocked: '',
-  realname: '',
-  id_number: '',
+  good_id: '',
+  seller_id: '',
+  state: '',
+  game: '',
+  title: '',
+  price: '',
+  detail: '',
   page: pagination.value.defaultCurrent,
   limit: pagination.value.defaultPageSize,
 };
@@ -261,7 +255,7 @@ const tableData = ref([]);
 
 // define apis
 
-import { blockUser, deleteUser, getUserList } from '@/api/app/user';
+import { deleteGood, getGoodList, hideGood } from '@/api/app/good';
 
 // const onBlockItem = async (row) => {
 //   try {
@@ -274,21 +268,21 @@ import { blockUser, deleteUser, getUserList } from '@/api/app/user';
 //   }
 // };
 
-const swapBlockedStatus = async (row) => {
+const hideItem = async (row) => {
   try {
-    await blockUser(row.uid, !row.blocked);
+    await hideGood(row.uid);
     fetchData();
     // console.log(data);
   } catch (e) {
     console.log(e);
   } finally {
-    MessagePlugin.info('切换封禁状态成功');
+    MessagePlugin.info('锁定货物成功');
   }
 };
 
 const deleteItem = async (row) => {
   try {
-    await deleteUser(row.uid);
+    await deleteGood(row.uid);
     fetchData();
     // console.log(data);
   } catch (e) {
@@ -302,12 +296,12 @@ const dataLoading = ref(false);
 const fetchData = async () => {
   dataLoading.value = true;
   try {
-    tableData.value = await getUserList(formData.value).then((res) => {
+    tableData.value = await getGoodList(formData.value).then((res) => {
       pagination.value = {
         ...pagination.value,
         total: res.count,
       };
-      return res.users;
+      return res.goods;
     });
     // console.log(data);
   } catch (e) {
@@ -320,30 +314,6 @@ const fetchData = async () => {
 onMounted(() => {
   fetchData();
 });
-
-// const onReset = (val) => {
-//   console.log(formData.value);
-//   console.log(val);
-// };
-
-// const onSubmit = async ({ validateResult, firstError }) => {
-//   console.log(formData);
-//   MessagePlugin.info('查询中...');
-
-//   tableData.value = await getUserList(formData.value).then((res) => {
-//     pagination.value = {
-//       ...pagination.value,
-//       total: res.count,
-//     };
-//     return res.users;
-//   });
-//   if (validateResult === true) {
-//     MessagePlugin.success('查询成功');
-//   } else {
-//     console.log('Validate Errors: ', firstError, validateResult);
-//     MessagePlugin.warning(firstError);
-//   }
-// };
 
 const rehandlePageChange = (pageInfo: PageInfo, newDataSource: TableRowData[]) => {
   formData.value.page = pageInfo.current;
