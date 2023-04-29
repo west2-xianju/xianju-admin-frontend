@@ -28,7 +28,7 @@ const transform: AxiosTransform = {
     if (res.status === 204 || method === 'put' || method === 'patch') {
       return res;
     }
-    console.log(res.status);
+    // console.log(res);
 
     if (res.status === 401) {
       throw new Error(`登录态失效`);
