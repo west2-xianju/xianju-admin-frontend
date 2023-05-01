@@ -1,5 +1,5 @@
 <template>
-  <div :class="prefix + '-footer'">Developed by zenor0, based on Vue3 + TDesign</div>
+  <div :class="prefix + '-footer'">Developed by zenor0 & Powered by Vue3 + TDesign</div>
 </template>
 
 <script setup lang="ts">

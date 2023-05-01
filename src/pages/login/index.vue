@@ -19,7 +19,7 @@
       <tdesign-setting />
     </div>
 
-    <footer class="copyright">Developed by zenor0, based on Vue3 + TDesign</footer>
+    <footer class="copyright">Developed by zenor0 & Powered by Vue3 + TDesign</footer>
   </div>
 </template>
 <script lang="ts">
