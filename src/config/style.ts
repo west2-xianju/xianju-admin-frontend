@@ -1,14 +1,29 @@
+// export default {
+//   showFooter: true,
+//   isSidebarCompact: false,
+//   showBreadcrumb: false,
+//   mode: 'light',
+//   layout: 'side',
+//   splitMenu: false,
+//   isFooterAside: false,
+//   isSidebarFixed: true,
+//   isHeaderFixed: true,
+//   isUseTabsRouter: false,
+//   showHeader: true,
+//   brandTheme: '#0052D9',
+// };
+
 export default {
   showFooter: true,
   isSidebarCompact: false,
   showBreadcrumb: false,
-  mode: 'light',
+  mode: 'auto',
   layout: 'side',
   splitMenu: false,
   isFooterAside: false,
   isSidebarFixed: true,
   isHeaderFixed: true,
-  isUseTabsRouter: false,
+  isUseTabsRouter: true,
   showHeader: true,
-  brandTheme: '#0052D9',
+  brandTheme: '#ffc500',
 };

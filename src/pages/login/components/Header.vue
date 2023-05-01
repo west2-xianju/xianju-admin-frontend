@@ -1,6 +1,6 @@
 <template>
   <header class="login-header">
-    <logo-full-icon class="logo" />
+    <xianju-icon-text class="logo" />
     <div class="operations-container">
       <t-button theme="default" shape="square" variant="text" @click="navToGitHub">
         <t-icon name="logo-github" class="icon" />
@@ -16,7 +16,8 @@
 </template>
 
 <script setup lang="ts">
-import LogoFullIcon from '@/assets/assets-logo-full.svg?component';
+import XianjuIconText from '@/assets/assets-xianju-icon-text.svg?component';
+// import LogoFullIcon from '@/assets/assets-logo-full.svg?component';
 import { useSettingStore } from '@/store';
 
 const settingStore = useSettingStore();

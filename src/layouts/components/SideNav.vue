@@ -21,8 +21,10 @@ import type { PropType } from 'vue';
 import { computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
-import AssetLogoFull from '@/assets/assets-logo-full.svg?component';
-import AssetLogo from '@/assets/assets-t-logo.svg?component';
+import AssetLogo from '@/assets/assets-xianju-icon.svg?component';
+import AssetLogoFull from '@/assets/assets-xianju-icon-text.svg?component';
+// import AssetLogoFull from '@/assets/assets-logo-full.svg?component';
+// import AssetLogo from '@/assets/assets-t-logo.svg?component';
 import { prefix } from '@/config/global';
 import { getActive, getRoutesExpanded } from '@/router';
 import { useSettingStore } from '@/store';
