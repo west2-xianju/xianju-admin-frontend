@@ -26,7 +26,6 @@
     <div class="table-container">
       <t-table
         :selected-row-keys="selectedRowKeys"
-        select-on-row-click
         :data="tableData"
         :columns="COLUMNS"
         :row-key="rowKey"
