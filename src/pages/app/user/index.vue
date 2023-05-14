@@ -301,8 +301,13 @@ const deleteItem = async (row) => {
 const dataLoading = ref(false);
 const fetchData = async () => {
   dataLoading.value = true;
+  const queryValue = {
+    ...filterValue.value,
+    ...pageValue.value,
+    ...sortValue.value,
+  };
   try {
-    tableData.value = await getUserList(formData.value).then((res) => {
+    tableData.value = await getUserList(queryValue).then((res) => {
       pagination.value = {
         ...pagination.value,
         total: res.count,
@@ -316,7 +321,6 @@ const fetchData = async () => {
     dataLoading.value = false;
   }
 };
-
 onMounted(() => {
   fetchData();
 });
@@ -358,20 +362,18 @@ const rehandleChange = (changeParams, triggerAndData) => {
 
 const filterValue = ref({ register_time: [] });
 
-const sort = ref({
+const sortValue = ref({
   order_by: '',
   order: '',
 });
 
+const pageValue = ref({ page: pagination.value.defaultCurrent, limit: pagination.value.defaultPageSize });
+
 const rehandleSortChange = (val) => {
   // console.log('sort change');
-  sort.value.order_by = val.sortBy;
-  sort.value.order = val.descending === true ? 'desc' : 'asc';
-  formData.value = {
-    ...formData.value,
-    ...filterValue.value,
-    ...sort.value,
-  };
+  sortValue.value.order_by = val.sortBy;
+  sortValue.value.order = val.descending === true ? 'desc' : 'asc';
+
   console.log(formData);
   // request(filters);
   fetchData();
@@ -380,22 +382,16 @@ const rehandleSortChange = (val) => {
 const rehandleFilterChange = async (filters) => {
   filterValue.value = {
     ...filters,
+    ...sortValue.value,
     createTime: filters.createTime || [],
   };
 
-  formData.value = {
-    ...formData.value,
-    ...filterValue.value,
-    ...sort.value,
-    createTime: filters.createTime || [],
-  };
   try {
     fetchData();
   } catch (e) {
     console.log(e);
   } finally {
     MessagePlugin.info('查询成功');
-    formData.value = { ...searchForm.value };
   }
 };
 

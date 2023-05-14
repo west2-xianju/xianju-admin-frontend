@@ -47,6 +47,7 @@
           <t-tag v-if="row.state === 'locked'" theme="danger" variant="light"> 已锁定 </t-tag>
           <t-tag v-if="row.state === 'sold'" theme="warning" variant="light"> 已售出 </t-tag>
           <t-tag v-if="row.state === 'canceled'" theme="default" variant="light"> 已取消 </t-tag>
+          <t-tag v-if="row.state === 'deleted'" theme="default" variant="light"> 已删除 </t-tag>
         </template>
 
         <template #op="{ row }">
@@ -175,7 +176,14 @@ const COLUMNS: PrimaryTableCol<TableRowData>[] = [
     width: 100,
     filter: {
       type: 'single',
-      list: [{ label: '待审核', value: 'pending' }],
+      list: [
+        { label: '待审核', value: 'pending' },
+        { label: '已上架', value: 'released' },
+        { label: '已锁定', value: 'locked' },
+        { label: '已售出', value: 'sold' },
+        { label: '已取消', value: 'canceled' },
+        { label: '已删除', value: 'deleted' },
+      ],
     },
     colKey: 'state',
   },
