@@ -20,7 +20,7 @@ export const useUserStore = defineStore('user', {
     },
   },
   actions: {
-    async login(userInfo: Record<string, unknown>) {
+    async login(userInfo: { username: string; password: string }) {
       // const mockLogin = async (loginResponse: Record<string, unknown>) => {
       //   console.log('Login response', loginResponse);
 

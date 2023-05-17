@@ -21,7 +21,6 @@
         :vertical-align="verticalAlign"
         :filter-value="filterValue"
         :hover="hover"
-        :sort="sort"
         :pagination="pagination"
         :loading="dataLoading"
         :header-affixed-top="headerAffixedTop"
@@ -140,8 +139,8 @@ const COLUMNS: PrimaryTableCol<TableRowData>[] = [
     filter: {
       type: 'single',
       list: [
-        { label: '已冻结', value: true },
-        { label: '正常', value: false },
+        { label: '已冻结', value: 'true' },
+        { label: '正常', value: 'false' },
       ],
     },
     colKey: 'blocked',

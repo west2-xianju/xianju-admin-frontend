@@ -28,7 +28,7 @@
         :vertical-align="verticalAlign"
         :filter-value="filterValue"
         :hover="hover"
-        :sort="sortValue"
+        :sort="sortKey"
         :pagination="pagination"
         :loading="dataLoading"
         :header-affixed-top="headerAffixedTop"
@@ -173,7 +173,10 @@ const pagination = ref({
   defaultCurrent: 1,
   total: 0,
 });
-
+const sortKey = ref({
+  sortBy: '',
+  descending: false,
+});
 const sortValue = ref({
   order_by: '',
   order: '',

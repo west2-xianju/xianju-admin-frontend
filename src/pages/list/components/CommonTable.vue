@@ -247,7 +247,8 @@ onMounted(() => {
 const visible = ref(false);
 
 const popMessage = (val, context = {}) => {
-  if (context && context.trigger === 'confirm') {
+  // if (context && context.trigger === 'confirm') {
+  if (context) {
     MessagePlugin.success('hi');
     // const msg = MessagePlugin.success('hi');
     // const timer = setTimeout(() => {

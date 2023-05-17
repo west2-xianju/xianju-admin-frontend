@@ -10,13 +10,13 @@ export interface GoodInfo {
 }
 
 export interface getGoodListQuery {
-  good_id: number;
-  seller_id: number;
+  good_id?: number;
+  seller_id?: number;
   state?: String;
-  game: String;
-  title: String;
-  price: String;
-  detail: String;
+  game?: String;
+  title?: String;
+  price?: String;
+  detail?: String;
   publish_time?: String;
   order_by?: String;
   order?: String;

@@ -47,7 +47,7 @@
             </t-form-item>
           </t-col>
           <t-col :span="12">
-            <t-form-item label="密码" name="realname">
+            <t-form-item label="密码" name="password">
               <t-input v-model="formData.password"></t-input>
             </t-form-item>
           </t-col>
