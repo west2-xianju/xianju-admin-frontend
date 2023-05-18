@@ -1,6 +1,6 @@
 export interface GoodInfo {
-  good_id: number;
-  seller_id: number;
+  good_id?: string;
+  seller_id: string;
   state?: String;
   game: String;
   title: String;
@@ -9,9 +9,20 @@ export interface GoodInfo {
   publish_time?: String;
 }
 
+export interface GoodForm {
+  good_id?: string;
+  seller_id?: string;
+  state?: String;
+  game?: String;
+  title?: String;
+  price?: String;
+  detail?: String;
+  publish_time?: String;
+}
+
 export interface getGoodListQuery {
-  good_id?: number;
-  seller_id?: number;
+  good_id?: string;
+  seller_id?: string;
   state?: String;
   game?: String;
   title?: String;

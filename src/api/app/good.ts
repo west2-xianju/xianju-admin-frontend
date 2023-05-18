@@ -1,6 +1,6 @@
 import { request } from '@/utils/request';
 
-import { getGoodListQuery, GoodInfo, GoodList } from './models/goodModels';
+import { getGoodListQuery, GoodForm, GoodInfo, GoodList } from './models/goodModels';
 
 export function getGoodList(query: getGoodListQuery) {
   return request.get<GoodList>({
@@ -21,7 +21,7 @@ export function createGood(data: GoodInfo) {
     data,
   });
 }
-export function updateGood(goodId: String, data: GoodInfo) {
+export function updateGood(goodId: String, data: GoodForm) {
   return request.put({
     url: `/goods/${goodId}`,
     data,

@@ -2,7 +2,7 @@
   <div class="list-common-table">
     <t-row justify="space-between" class="form-basic-item">
       <div>
-        <t-button theme="primary" @click="onAddUser">
+        <t-button theme="primary" @click="onAddGood">
           <template #icon><add-icon /></template>
           新建货物
         </t-button>
@@ -119,7 +119,7 @@ const COLUMNS: PrimaryTableCol<TableRowData>[] = [
   },
   {
     title: '货物ID',
-    // sorter: true,
+    sorter: true,
     fixed: 'left',
     width: 100,
     ellipsis: true,
@@ -138,7 +138,7 @@ const COLUMNS: PrimaryTableCol<TableRowData>[] = [
   },
   {
     title: '卖家ID',
-    // sorter: true,
+    sorter: true,
     width: 100,
     filter: {
       type: 'input',
@@ -224,6 +224,7 @@ const COLUMNS: PrimaryTableCol<TableRowData>[] = [
   },
   {
     title: '价格',
+    sorter: true,
     width: 160,
     filter: {
       type: 'input',
@@ -430,7 +431,7 @@ const onBunchOperation = async (opFunction) => {
 };
 
 const onEditItem = async (row) => {
-  MessagePlugin.info(`call Edit${row}`);
+  router.push({ name: 'AppEditGood', query: { ...row } });
 };
 
 const onRefreshList = () => {
@@ -444,8 +445,8 @@ const onRefreshList = () => {
 };
 
 const router = useRouter();
-const onAddUser = () => {
-  router.push('/app/user/create');
+const onAddGood = () => {
+  router.push('/app/good/create');
 };
 
 const headerAffixedTop = computed(
