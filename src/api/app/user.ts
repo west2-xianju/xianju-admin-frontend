@@ -1,6 +1,6 @@
 import { request } from '@/utils/request';
 
-import { getUserListQuery, userInfo, userList } from './models/userModels';
+import { getUserListQuery, UpdateUserInfo, userInfo, userList } from './models/userModels';
 
 export function getUserList(query: getUserListQuery) {
   return request.get<userList>({
@@ -21,7 +21,7 @@ export function createUser(data: userInfo) {
     data,
   });
 }
-export function updateUser(userId: String, data: userInfo) {
+export function updateUser(userId: String, data: UpdateUserInfo) {
   return request.put({
     url: `/users/${userId}`,
     data,

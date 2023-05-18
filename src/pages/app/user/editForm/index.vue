@@ -18,7 +18,7 @@
         <t-row class="row-gap" :gutter="[32, 24]">
           <t-col :span="7">
             <t-form-item label="用户ID" name="user_id">
-              <t-input v-model="formData.user_id"></t-input>
+              <t-input v-model="formData.user_id" disabled></t-input>
             </t-form-item>
           </t-col>
           <t-col :span="5">
@@ -53,7 +53,7 @@
           </t-col>
           <t-col :span="12">
             <t-form-item label="密码" name="password">
-              <t-input v-model="formData.password"></t-input>
+              <t-input v-model="formData.password" placeholder="*********"></t-input>
             </t-form-item>
           </t-col>
         </t-row>
@@ -78,30 +78,57 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { MessagePlugin } from 'tdesign-vue-next';
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { FormRule, MessagePlugin } from 'tdesign-vue-next';
+import { onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
-import { createUser } from '@/api/app/user';
+import { updateUser } from '@/api/app/user';
 
-import { FORM_RULES, INITIAL_DATA } from './constants';
+const FORM_RULES: Record<string, FormRule[]> = {
+  user_id: [{ required: true, message: '请输入用户ID', type: 'error' }],
+  username: [{ required: true, message: '请输入用户名', type: 'error' }],
+  nickname: [{ required: false, message: '请输入昵称', type: 'error' }],
+  email: [{ required: true, message: '请输入邮箱', type: 'error' }],
+  realname: [{ required: false, message: '请输入真实姓名', type: 'error' }],
+  id_number: [{ required: false, message: '请输入身份证号', type: 'error' }],
+  password: [{ required: false, message: '请输入密码', type: 'error' }],
+};
 
-const formData = ref({ ...INITIAL_DATA });
+interface FormData {
+  user_id?: string;
+  username?: string;
+  nickname?: string;
+  email?: string;
+  realname?: string;
+  id_number?: string;
+  password?: string;
+  blocked?: boolean;
+}
+
+const formData = ref<FormData>({});
 
 const onReset = () => {
   MessagePlugin.warning('取消新建');
+  router.back();
 };
 
 const router = useRouter();
+const route = useRoute();
 
+onMounted(() => {
+  console.log(route.query);
+  formData.value = { ...route.query };
+  formData.value.user_id = route.query.uid;
+  formData.value.blocked = route.query.blocked === 'true';
+});
 const onSubmit = ({ validateResult }) => {
   if (validateResult === true) {
     try {
-      createUser(formData.value);
+      updateUser(formData.value.user_id, formData.value);
     } catch (error) {
       console.log(error);
     } finally {
-      MessagePlugin.success('新建成功');
+      MessagePlugin.success('修改成功');
       console.log(formData);
       router.back();
     }

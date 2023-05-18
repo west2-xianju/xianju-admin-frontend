@@ -395,7 +395,11 @@ const rehandleFilterChange = async (filters) => {
 };
 
 const onEditItem = async (row) => {
-  MessagePlugin.info(`call Edit${row}`);
+  // console.log(row);
+
+  router.push({ name: 'AppEditUser', query: { ...row } });
+  // router.push(`/app/user/edit`)
+  // MessagePlugin.info(`call Edit${row}`);
 };
 
 const onRefreshList = () => {
