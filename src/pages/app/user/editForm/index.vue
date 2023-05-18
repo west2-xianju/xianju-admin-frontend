@@ -79,6 +79,7 @@ export default {
 
 <script setup lang="ts">
 import { FormRule, MessagePlugin } from 'tdesign-vue-next';
+import isEmail from 'validator/lib/isEmail';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -88,7 +89,7 @@ const FORM_RULES: Record<string, FormRule[]> = {
   user_id: [{ required: true, message: '请输入用户ID', type: 'error' }],
   username: [{ required: true, message: '请输入用户名', type: 'error' }],
   nickname: [{ required: false, message: '请输入昵称', type: 'error' }],
-  email: [{ required: true, message: '请输入邮箱', type: 'error' }],
+  email: [{ required: true, message: '请输入邮箱', type: 'error' }, { validator: isEmail }],
   realname: [{ required: false, message: '请输入真实姓名', type: 'error' }],
   id_number: [{ required: false, message: '请输入身份证号', type: 'error' }],
   password: [{ required: false, message: '请输入密码', type: 'error' }],
