@@ -9,7 +9,7 @@ const CWD = process.cwd();
 
 // https://vitejs.dev/config/
 export default ({ mode }: ConfigEnv): UserConfig => {
-  const { VITE_BASE_URL, VITE_API_URL_PREFIX } = loadEnv(mode, CWD);
+  const { VITE_BASE_URL } = loadEnv(mode, CWD);
   return {
     base: VITE_BASE_URL,
     resolve: {
@@ -44,7 +44,19 @@ export default ({ mode }: ConfigEnv): UserConfig => {
       port: 3002,
       host: '0.0.0.0',
       proxy: {
-        [VITE_API_URL_PREFIX]: { target: 'http://127.0.0.1:3000/', changeOrigin: true },
+        // [VITE_API_URL_PREFIX]: { target: 'http://192.168.1.250:3000/', changeOrigin: true },
+        '/api': { target: 'http://192.168.1.250:3000/', changeOrigin: true },
+        '/chat': {
+          target: 'http://192.168.1.250:5000/',
+          changeOrigin: true,
+          ws: true,
+          rewrite: (path) => path.replace(/^\/chat/, ''),
+        },
+        '/socket.io': {
+          target: 'http://192.168.1.250:5000/',
+          changeOrigin: true,
+          ws: true,
+        },
       },
     },
   };
