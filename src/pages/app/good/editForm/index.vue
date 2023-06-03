@@ -107,7 +107,7 @@ const FORM_RULES: Record<string, FormRule[]> = {
 
 interface FormData {
   uid?: string;
-  good_id?: string;
+  good_id?: any;
   seller_id?: string;
   game?: string;
   title?: string;

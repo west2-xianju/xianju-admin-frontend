@@ -96,7 +96,7 @@ const FORM_RULES: Record<string, FormRule[]> = {
 };
 
 interface FormData {
-  user_id?: string;
+  user_id?: any;
   username?: string;
   nickname?: string;
   email?: string;

@@ -11,9 +11,9 @@ export interface OrderInfo {
 }
 export interface getOrderListQuery {
   order_id?: string;
-  from_id: string;
-  to_id: string;
-  good_id: string;
+  from_id?: string;
+  to_id?: string;
+  good_id?: string;
   state?: String;
   price?: String;
   create_time?: String;

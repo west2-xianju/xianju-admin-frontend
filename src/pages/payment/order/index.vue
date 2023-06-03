@@ -191,7 +191,7 @@ const sortValue = ref({
 const selectedRowKeys = ref([]);
 const pageValue = ref({ page: pagination.value.defaultCurrent, limit: pagination.value.defaultPageSize });
 
-const filterValue = ref({ register_time: [] });
+const filterValue = ref({});
 const tableData = ref([]);
 // define apis
 
