@@ -28,7 +28,6 @@ jobs:
         uses: actions/setup-node@v3.0.0 
         with: 
               node-version: "18.X"
-              cache: 'npm'
       - name: install deps
         run: npm install
       - name: build app
