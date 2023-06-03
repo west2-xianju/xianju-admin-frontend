@@ -11,10 +11,15 @@
   </div>
 
   <div class="list-common-table">
-    <t-space size="medium">
-      <t-textarea id="chat" v-model="chatLog" :autosize="{ minRows: 20, maxRows: 20 }"></t-textarea>
-      <t-textarea v-model="notificationLog" :autosize="{ minRows: 20, maxRows: 20 }"></t-textarea>
-    </t-space>
+    <t-row :gutter="16">
+      <t-col :span="6">
+        <t-textarea id="chat" v-model="chatLog" :autosize="{ minRows: 20, maxRows: 20 }"></t-textarea>
+      </t-col>
+      <t-col :span="6">
+        <t-textarea v-model="notificationLog" :autosize="{ minRows: 20, maxRows: 20 }"></t-textarea>
+      </t-col>
+    </t-row>
+    <t-space size="medium"> </t-space>
     <t-input v-model="messageContent">input message</t-input>
     <t-button id="send" @click="onSendMessage">Send</t-button>
     <t-button id="debug" @click="onDebugEvent">Debugging</t-button>
@@ -84,7 +89,7 @@ onMounted(() => {
   socketNotification.on('notification', (data) => {
     console.log('notification', data);
     // notificationLog.value += `${JSON.stringify(data)}\n`;
-    notificationLog.value += `<notification> ${data.detail}\n`;
+    notificationLog.value += `<notification> [${data.level}] ${data.title}: ${data.content}\n`;
   });
 });
 

@@ -48,6 +48,7 @@
           <t-tag v-if="row.state === 'sold'" theme="warning" variant="light"> 已售出 </t-tag>
           <t-tag v-if="row.state === 'canceled'" theme="default" variant="light"> 已取消 </t-tag>
           <t-tag v-if="row.state === 'deleted'" theme="default" variant="light"> 已删除 </t-tag>
+          <t-tag v-if="row.state === 'await'" theme="default" variant="light"> 等待确认 </t-tag>
         </template>
 
         <template #op="{ row }">
