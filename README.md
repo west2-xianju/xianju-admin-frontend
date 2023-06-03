@@ -1,6 +1,6 @@
 # xianju-admin-frontend
 
-![Xianju Logo](https://raw.githubusercontent.com/west2-xianju/xianju-admin-frontend/main/src/assets/assets-xianju-icon-text.svg)
+![Xianju Logo](https://raw.githubusercontent.com/west2-xianju/xianju-admin-frontend/main/docs/logo-text.png)
 
 This repository contains the frontend code for Xianju Admin Management Web, which is implemented using Vue.js and TDesign Starter (vite + pinia + vue-router + echarts). Xianju is an application that provides a user-friendly interface for managing various administrative tasks.
 
