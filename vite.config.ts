@@ -41,7 +41,7 @@ export default ({ mode }: ConfigEnv): UserConfig => {
     ],
 
     server: {
-      port: 3002,
+      port: 8088,
       host: '0.0.0.0',
       proxy: {
         // [VITE_API_URL_PREFIX]: { target: 'http://192.168.1.250:3000/', changeOrigin: true },
