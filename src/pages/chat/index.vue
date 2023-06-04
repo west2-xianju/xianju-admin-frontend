@@ -49,7 +49,7 @@ const notificationLog = ref('');
 //   autoConnect: false,
 // });
 
-const baseSocketioUrl = 'http://192.168.1.250:3002';
+const baseSocketioUrl = import.meta.env.VITE_API_URL;
 
 const socket = io(`${baseSocketioUrl}/chat`, {
   timeout: 5000,

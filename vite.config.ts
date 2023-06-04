@@ -45,16 +45,14 @@ export default ({ mode }: ConfigEnv): UserConfig => {
       host: '0.0.0.0',
       proxy: {
         // [VITE_API_URL_PREFIX]: { target: 'http://192.168.1.250:3000/', changeOrigin: true },
-        '/api': { target: 'http://192.168.1.250:3000/', changeOrigin: true },
+        '/api': { target: 'http://192.168.1.250:3000/' },
         '/chat': {
           target: 'http://192.168.1.250:5000/',
-          changeOrigin: true,
           ws: true,
           rewrite: (path) => path.replace(/^\/chat/, ''),
         },
         '/socket.io': {
           target: 'http://192.168.1.250:5000/',
-          changeOrigin: true,
           ws: true,
         },
       },
