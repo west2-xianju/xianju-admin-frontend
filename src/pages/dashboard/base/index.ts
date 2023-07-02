@@ -191,11 +191,17 @@ export function getLineChartDataSet({
   dateTime = [],
   placeholderColor,
   borderColor,
-}: { dateTime?: Array<string> } & TChartColor) {
-  const divideNum = 10;
+  thisMonth = [],
+  lastMonth = [],
+}: { dateTime?: Array<string>; thisMonth?: Array<string>; lastMonth?: Array<string> } & TChartColor) {
+  // const statsInfo = request.get({
+  //   url: '/orders/stats',
+  // });
+  const divideNum = 30;
   const timeArray = [];
-  const inArray = [];
-  const outArray = [];
+  console.log('statsInfo..', thisMonth, lastMonth);
+  const inArray = thisMonth;
+  const outArray = lastMonth;
   for (let i = 0; i < divideNum; i++) {
     if (dateTime.length > 0) {
       const dateAbsTime: number = (new Date(dateTime[1]).getTime() - new Date(dateTime[0]).getTime()) / divideNum;
@@ -210,8 +216,8 @@ export function getLineChartDataSet({
       );
     }
 
-    inArray.push(getRandomArray().toString());
-    outArray.push(getRandomArray().toString());
+    // inArray.push(statsInfo.this_month[i].toString());
+    // outArray.push(getRandomArray().toString());
   }
 
   const dataSet = {
@@ -303,7 +309,7 @@ export function getLineChartDataSet({
  * @returns {*}
  */
 export function getPieChartDataSet({
-  radius = 42,
+  statsData = [],
   textColor,
   placeholderColor,
   containerColor,
@@ -333,7 +339,7 @@ export function getPieChartDataSet({
     },
     series: [
       {
-        name: '销售渠道',
+        name: '货物概览',
         type: 'pie',
         radius: ['48%', '60%'],
         avoidLabelOverlap: true,
@@ -346,7 +352,7 @@ export function getPieChartDataSet({
         label: {
           show: true,
           position: 'center',
-          formatter: ['{value|{d}%}', '{name|{b}渠道占比}'].join('\n'),
+          formatter: ['{value|{d}%}', '{name|{b}占比}'].join('\n'),
           rich: {
             value: {
               color: textColor,
@@ -365,7 +371,7 @@ export function getPieChartDataSet({
           scale: true,
           label: {
             show: true,
-            formatter: ['{value|{d}%}', '{name|{b}渠道占比}'].join('\n'),
+            formatter: ['{value|{d}%}', '{name|{b}占比}'].join('\n'),
             rich: {
               value: {
                 color: textColor,
@@ -384,13 +390,7 @@ export function getPieChartDataSet({
         labelLine: {
           show: false,
         },
-        data: [
-          {
-            value: 1048,
-            name: '线上',
-          },
-          { value: radius * 7, name: '门店' },
-        ],
+        data: statsData,
       },
     ],
   };

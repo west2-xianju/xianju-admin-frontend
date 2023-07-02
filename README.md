@@ -9,8 +9,10 @@ This repository contains the frontend code for Xianju Admin Management Web, whic
 ## Features
 
 - **User Management:** Manage user accounts, roles, and permissions.
-- ~~**Data Visualization:** Visualize data using charts and graphs.~~
+- **Data Visualization:** Visualize data using charts and graphs.
 - **Dashboard:** View and analyze key metrics and statistics.
+- **Dynamic router:** User Router is managed by back-end service.
+- **Chat demo:** Integrated chat demo.
 - ~~**Settings:** Configure application settings and preferences.~~
 
 ## Prerequisites

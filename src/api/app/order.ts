@@ -8,3 +8,9 @@ export function getOrderList(query: getOrderListQuery) {
     params: query,
   });
 }
+
+export function getOrderStats() {
+  return request.get({
+    url: '/orders/stats',
+  });
+}

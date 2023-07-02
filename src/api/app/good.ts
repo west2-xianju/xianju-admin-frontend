@@ -46,3 +46,9 @@ export function deleteGood(goodId: String) {
     url: `/goods/${goodId}`,
   });
 }
+
+export function getGoodsStats() {
+  return request.get({
+    url: '/goods/stats',
+  });
+}

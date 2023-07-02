@@ -1,7 +1,7 @@
 <template>
   <t-row :gutter="16" class="row-container">
     <t-col :xs="12" :xl="9">
-      <t-card title="统计数据" :subtitle="`(万元)${currentMonth}`" class="dashboard-chart-card" :bordered="false">
+      <t-card title="订单金额" :subtitle="`(元)${currentMonth}`" class="dashboard-chart-card" :bordered="false">
         <template #option>
           <div class="dashboard-chart-title-container">
             <t-date-range-picker
@@ -22,7 +22,7 @@
       </t-card>
     </t-col>
     <t-col :xs="12" :xl="3">
-      <t-card title="销售渠道" :subtitle="currentMonth" class="dashboard-chart-card" :bordered="false">
+      <t-card title="货物概览" :subtitle="currentMonth" class="dashboard-chart-card" :bordered="false">
         <div
           id="countContainer"
           ref="countContainer"
@@ -41,6 +41,8 @@ import * as echarts from 'echarts/core';
 import { CanvasRenderer } from 'echarts/renderers';
 import { computed, nextTick, onDeactivated, onMounted, onUnmounted, ref, watch } from 'vue';
 
+import { getGoodsStats } from '@/api/app/good';
+import { getOrderStats } from '@/api/app/order';
 import { useSettingStore } from '@/store';
 import { changeChartsTheme } from '@/utils/color';
 import { LAST_7_DAYS } from '@/utils/date';
@@ -71,23 +73,32 @@ const chartColors = computed(() => store.chartColors);
 // monitorChart
 let monitorContainer: HTMLElement;
 let monitorChart: echarts.ECharts;
-const renderMonitorChart = () => {
+const renderMonitorChart = async () => {
   if (!monitorContainer) {
     monitorContainer = document.getElementById('monitorContainer');
   }
   monitorChart = echarts.init(monitorContainer);
-  monitorChart.setOption(getLineChartDataSet({ ...chartColors.value }));
+  await getOrderStats().then((res) => {
+    // console.log(res);
+    monitorChart.setOption(
+      getLineChartDataSet({ ...chartColors.value, thisMonth: res.this_month, lastMonth: res.last_month }),
+    );
+  });
 };
 
 // monitorChart
 let countContainer: HTMLElement;
 let countChart: echarts.ECharts;
-const renderCountChart = () => {
+const renderCountChart = async () => {
   if (!countContainer) {
     countContainer = document.getElementById('countContainer');
   }
   countChart = echarts.init(countContainer);
-  countChart.setOption(getPieChartDataSet(chartColors.value));
+  await getGoodsStats().then((res) => {
+    console.log(res.stat);
+    countChart.setOption(getPieChartDataSet({ ...chartColors.value, statsData: res.stat }));
+  });
+  // countChart.setOption(getPieChartDataSet(chartColors.value));
 };
 
 const renderCharts = () => {
@@ -168,9 +179,14 @@ const storeModeWatch = watch(
   },
 );
 
-const onCurrencyChange = (checkedValues: string[]) => {
+const onCurrencyChange = async (checkedValues: string[]) => {
   currentMonth.value = getThisMonth(checkedValues);
-  monitorChart.setOption(getLineChartDataSet({ dateTime: checkedValues, ...chartColors.value }));
+  monitorChart.setOption(
+    getLineChartDataSet({
+      dateTime: checkedValues,
+      ...chartColors.value,
+    }),
+  );
 };
 </script>
 
