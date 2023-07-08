@@ -81,13 +81,37 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { MessagePlugin } from 'tdesign-vue-next';
+import { FormRule, MessagePlugin } from 'tdesign-vue-next';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { createGood } from '@/api/app/good';
 
-import { FORM_RULES, INITIAL_DATA } from './constants';
+const FORM_RULES: Record<string, FormRule[]> = {
+  good_id: [{ required: true, message: '请输入商品ID', type: 'error' }],
+  seller_id: [{ required: true, message: '请输入卖家ID', type: 'error' }],
+  title: [{ required: true, message: '请输入商品标题', type: 'error' }],
+  state: [{ required: true, message: '请输入商品状态', type: 'error' }],
+  detail: [{ required: true, message: '请输入商品详情', type: 'error' }],
+  price: [
+    { required: true, message: '请输入商品价格', type: 'error' },
+    { pattern: /^\d+$/, message: '请输入数字' },
+  ],
+  publish_time: [{ required: true, message: '请输入发布时间', type: 'error' }],
+};
+
+const INITIAL_DATA = {
+  uid: '',
+  good_id: '',
+  seller_id: '',
+  title: '',
+  state: '',
+  game: '',
+  detail: '',
+  price: '',
+  publish_time: '',
+};
+// import { FORM_RULES, INITIAL_DATA } from './constants';
 
 const formData = ref({ ...INITIAL_DATA });
 

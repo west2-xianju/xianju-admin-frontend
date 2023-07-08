@@ -33,7 +33,7 @@
           </t-col>
 
           <t-col :span="4">
-            <t-form-item label="状态" name="blocked">
+            <t-form-item label="状态" name="state">
               <t-select v-model="formData.state">
                 <t-option label="待审核" value="pending">待审核</t-option>
                 <t-option label="已发布" value="released">已发布</t-option>

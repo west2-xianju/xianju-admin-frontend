@@ -78,14 +78,36 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { MessagePlugin } from 'tdesign-vue-next';
+import { FormRule, MessagePlugin } from 'tdesign-vue-next';
+import isEmail from 'validator/lib/isEmail';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { createUser } from '@/api/app/user';
 
-import { FORM_RULES, INITIAL_DATA } from './constants';
+// import { INITIAL_DATA } from './constants';
 
+const FORM_RULES: Record<string, FormRule[]> = {
+  user_id: [{ required: true, message: '请输入用户ID', type: 'error' }],
+  username: [{ required: true, message: '请输入用户名', type: 'error' }],
+  nickname: [{ required: false, message: '请输入昵称', type: 'error' }],
+  email: [{ required: true, message: '请输入邮箱', type: 'error' }, { validator: isEmail }],
+  realname: [{ required: false, message: '请输入真实姓名', type: 'error' }],
+  id_number: [{ required: false, message: '请输入身份证号', type: 'error' }],
+  password: [{ required: false, message: '请输入密码', type: 'error' }],
+};
+
+const INITIAL_DATA = {
+  user_id: '',
+  username: '',
+  nickname: '',
+  email: '',
+  realname: '',
+  id_number: '',
+  password: '',
+  blocked: false,
+  // files: [],
+};
 const formData = ref({ ...INITIAL_DATA });
 
 const onReset = () => {

@@ -4,7 +4,7 @@
       <div>
         <t-button theme="primary" @click="onAddUser">
           <template #icon><add-icon /></template>
-          新建用户
+          新建管理员
         </t-button>
         <t-button theme="default" variant="outline" @click="onRefreshList"
           ><template #icon><refresh-icon /></template>
@@ -90,7 +90,7 @@ const hover = true;
 
 const COLUMNS: PrimaryTableCol<TableRowData>[] = [
   {
-    title: '用户ID',
+    title: '管理员ID',
     sorter: true,
     fixed: 'left',
     width: 100,
@@ -216,7 +216,7 @@ const COLUMNS: PrimaryTableCol<TableRowData>[] = [
   {
     title: '注册时间',
     colKey: 'register_time',
-    width: 200,
+    // width: 160,
     sorter: true,
     filter: {
       type: 'custom',
@@ -349,8 +349,8 @@ onMounted(() => {
 // };
 
 const rehandlePageChange = (pageInfo: PageInfo, newDataSource: TableRowData[]) => {
-  pageValue.value.page = pageInfo.current;
-  pageValue.value.limit = pageInfo.pageSize;
+  formData.value.page = pageInfo.current;
+  formData.value.limit = pageInfo.pageSize;
   console.log(formData);
   fetchData();
   console.log('分页变化', pageInfo, newDataSource);
@@ -381,10 +381,8 @@ const rehandleSortChange = (val) => {
 const rehandleFilterChange = async (filters) => {
   filterValue.value = {
     ...filters,
-    start: filters.register_time[0],
-    end: filters.register_time[1],
     ...sortValue.value,
-    // createTime: filters.createTime || [],
+    createTime: filters.createTime || [],
   };
 
   try {

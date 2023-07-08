@@ -4,7 +4,7 @@
       <div>
         <t-button theme="primary" @click="onAddUser">
           <template #icon><add-icon /></template>
-          新建用户
+          新建管理员
         </t-button>
         <t-button theme="default" variant="outline" @click="onRefreshList"
           ><template #icon><refresh-icon /></template>
@@ -29,9 +29,9 @@
         @filter-change="rehandleFilterChange"
         @change="rehandleChange"
       >
-        <template #blocked="{ row }">
-          <t-tag v-if="row.blocked === true" theme="danger" variant="light"> 已冻结 </t-tag>
-          <t-tag v-if="row.blocked === false" theme="success" variant="light"> 正常 </t-tag>
+        <template #level="{ row }">
+          <t-tag v-if="row.level === 'superuser'" theme="danger" variant="light"> 超级管理员 </t-tag>
+          <t-tag v-if="row.level === 'admin'" theme="success" variant="light"> 普通管理员 </t-tag>
         </template>
 
         <template #op="{ row }">
@@ -52,29 +52,29 @@
             ></t-button>
           </t-popconfirm>
 
-          <t-button shape="rectangle" variant="base" theme="danger" @click="swapBlockedStatus(row)">
+          <!-- <t-button shape="rectangle" variant="base" theme="danger" @click="swapBlockedStatus(row)">
             <template #icon> <swap-icon /></template>
-          </t-button>
+          </t-button> -->
 
           <!-- dynamic change button code -->
 
           <!-- <t-button v-if="row.blocked" shape="rectangle" variant="base" theme="danger" @click="onUnblockItem(row)"
-            ><swap-icon slot="icon"
-          /></t-button>
-          <t-button v-else shape="rectangle" variant="base" theme="primary" @click="onBlockItem(row)">
-            <swap-icon slot="icon"></swap-icon>
-          </t-button> -->
+			  ><swap-icon slot="icon"
+			/></t-button>
+			<t-button v-else shape="rectangle" variant="base" theme="primary" @click="onBlockItem(row)">
+			  <swap-icon slot="icon"></swap-icon>
+			</t-button> -->
 
           <!-- <t-button shape="rectangle" theme="primary">
-            <template #icon> <cloud-download-icon /></template>
-          </t-button> -->
+			  <template #icon> <cloud-download-icon /></template>
+			</t-button> -->
         </template>
       </t-table>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { AddIcon, DeleteIcon, EditIcon, RefreshIcon, SwapIcon } from 'tdesign-icons-vue-next';
+import { AddIcon, DeleteIcon, EditIcon, RefreshIcon } from 'tdesign-icons-vue-next';
 import { DateRangePickerPanel, MessagePlugin, PageInfo, PrimaryTableCol, TableRowData } from 'tdesign-vue-next';
 import { computed, onMounted, ref } from 'vue';
 // import Trend from '@/components/trend/index.vue';
@@ -90,7 +90,7 @@ const hover = true;
 
 const COLUMNS: PrimaryTableCol<TableRowData>[] = [
   {
-    title: '用户ID',
+    title: '管理员ID',
     sorter: true,
     fixed: 'left',
     width: 100,
@@ -106,7 +106,7 @@ const COLUMNS: PrimaryTableCol<TableRowData>[] = [
       showConfirmAndReset: true,
     },
     align: 'center',
-    colKey: 'uid',
+    colKey: 'admin_id',
   },
   {
     title: '用户名',
@@ -134,89 +134,21 @@ const COLUMNS: PrimaryTableCol<TableRowData>[] = [
   //   colKey: 'profile',
   // },
   {
-    title: '状态',
-    width: 100,
+    title: '账号权限',
+    width: 130,
     filter: {
       type: 'single',
       list: [
-        { label: '已冻结', value: 'true' },
-        { label: '正常', value: 'false' },
+        { label: '超级管理员', value: 'superuser' },
+        { label: '普通管理员', value: 'admin' },
       ],
     },
-    colKey: 'blocked',
-  },
-  {
-    title: '昵称',
-    width: 160,
-    filter: {
-      type: 'input',
-      resetValue: '',
-      confirmEvents: ['onEnter'],
-      props: {
-        placeholder: '输入关键词过滤',
-      },
-      // 是否显示重置取消按钮，一般情况不需要显示
-      showConfirmAndReset: true,
-    },
-    ellipsis: true,
-    align: 'left',
-    colKey: 'nickname',
-  },
-  {
-    title: '邮箱',
-    width: 160,
-    filter: {
-      type: 'input',
-      resetValue: '',
-      confirmEvents: ['onEnter'],
-      props: {
-        placeholder: '输入关键词过滤',
-      },
-      // 是否显示重置取消按钮，一般情况不需要显示
-      showConfirmAndReset: true,
-    },
-    ellipsis: true,
-    align: 'left',
-    colKey: 'email',
-  },
-  {
-    title: '真实姓名',
-    width: 160,
-    filter: {
-      type: 'input',
-      resetValue: '',
-      confirmEvents: ['onEnter'],
-      props: {
-        placeholder: '输入关键词过滤',
-      },
-      // 是否显示重置取消按钮，一般情况不需要显示
-      showConfirmAndReset: true,
-    },
-    ellipsis: true,
-    align: 'left',
-    colKey: 'realname',
-  },
-  {
-    title: '身份证号',
-    width: 160,
-    filter: {
-      type: 'input',
-      resetValue: '',
-      confirmEvents: ['onEnter'],
-      props: {
-        placeholder: '输入关键词过滤',
-      },
-      // 是否显示重置取消按钮，一般情况不需要显示
-      showConfirmAndReset: true,
-    },
-    ellipsis: true,
-    align: 'left',
-    colKey: 'id_number',
+    colKey: 'level',
   },
   {
     title: '注册时间',
-    colKey: 'register_time',
-    width: 200,
+    colKey: 'create_time',
+    // width: 160,
     sorter: true,
     filter: {
       type: 'custom',
@@ -245,13 +177,9 @@ const pagination = ref({
   total: 0,
 });
 const searchForm = {
-  user_id: '',
+  admin_id: '',
   username: '',
-  nickname: '',
-  email: '',
-  blocked: '',
-  realname: '',
-  id_number: '',
+  level: '',
   page: pagination.value.defaultCurrent,
   limit: pagination.value.defaultPageSize,
 };
@@ -260,7 +188,8 @@ const tableData = ref([]);
 
 // define apis
 
-import { blockUser, deleteUser, getUserList } from '@/api/app/user';
+// import { blockUser, deleteUser, getUserList } from '@/api/app/user';
+import { deleteAdmin, getAdminList } from '@/api/admin/admin';
 
 // const onBlockItem = async (row) => {
 //   try {
@@ -273,27 +202,27 @@ import { blockUser, deleteUser, getUserList } from '@/api/app/user';
 //   }
 // };
 
-const swapBlockedStatus = async (row) => {
-  try {
-    await blockUser(row.uid, !row.blocked);
-    fetchData();
-    // console.log(data);
-  } catch (e) {
-    console.log(e);
-  } finally {
-    MessagePlugin.info('切换封禁状态成功');
-  }
-};
+// const swapBlockedStatus = async (row) => {
+//   try {
+//     await blockAdmin(row.uid, !row.blocked);
+//     fetchData();
+//     // console.log(data);
+//   } catch (e) {
+//     console.log(e);
+//   } finally {
+//     MessagePlugin.info('切换封禁状态成功');
+//   }
+// };
 
 const deleteItem = async (row) => {
   try {
-    await deleteUser(row.uid);
+    await deleteAdmin(row.admin_id);
     fetchData();
     // console.log(data);
   } catch (e) {
     console.log(e);
   } finally {
-    MessagePlugin.success('成功删除用户', row.uid);
+    MessagePlugin.success('成功删除用户', row.admin_id);
   }
 };
 
@@ -306,12 +235,12 @@ const fetchData = async () => {
     ...sortValue.value,
   };
   try {
-    tableData.value = await getUserList(queryValue).then((res) => {
+    tableData.value = await getAdminList(queryValue).then((res) => {
       pagination.value = {
         ...pagination.value,
         total: res.count,
       };
-      return res.users;
+      return res.admins;
     });
     // console.log(data);
   } catch (e) {
@@ -323,30 +252,6 @@ const fetchData = async () => {
 onMounted(() => {
   fetchData();
 });
-
-// const onReset = (val) => {
-//   console.log(formData.value);
-//   console.log(val);
-// };
-
-// const onSubmit = async ({ validateResult, firstError }) => {
-//   console.log(formData);
-//   MessagePlugin.info('查询中...');
-
-//   tableData.value = await getUserList(formData.value).then((res) => {
-//     pagination.value = {
-//       ...pagination.value,
-//       total: res.count,
-//     };
-//     return res.users;
-//   });
-//   if (validateResult === true) {
-//     MessagePlugin.success('查询成功');
-//   } else {
-//     console.log('Validate Errors: ', firstError, validateResult);
-//     MessagePlugin.warning(firstError);
-//   }
-// };
 
 const rehandlePageChange = (pageInfo: PageInfo, newDataSource: TableRowData[]) => {
   pageValue.value.page = pageInfo.current;
@@ -381,10 +286,8 @@ const rehandleSortChange = (val) => {
 const rehandleFilterChange = async (filters) => {
   filterValue.value = {
     ...filters,
-    start: filters.register_time[0],
-    end: filters.register_time[1],
     ...sortValue.value,
-    // createTime: filters.createTime || [],
+    createTime: filters.createTime || [],
   };
 
   try {
@@ -396,17 +299,14 @@ const rehandleFilterChange = async (filters) => {
   }
 };
 
+const router = useRouter();
 const onEditItem = async (row) => {
-  // console.log(row);
-
-  router.push({ name: 'AppEditUser', query: { ...row } });
-  // router.push(`/app/user/edit`)
-  // MessagePlugin.info(`call Edit${row}`);
+  router.push({ name: 'AdminEdit', query: { ...row } });
 };
 
-const onRefreshList = () => {
+const onRefreshList = async () => {
   try {
-    fetchData();
+    await fetchData();
   } catch (e) {
     console.log(e);
   } finally {
@@ -414,9 +314,8 @@ const onRefreshList = () => {
   }
 };
 
-const router = useRouter();
-const onAddUser = () => {
-  router.push('/app/user/create');
+const onAddUser = async () => {
+  router.push({ name: 'AdminCreate' });
 };
 
 const headerAffixedTop = computed(

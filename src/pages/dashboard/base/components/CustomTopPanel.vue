@@ -65,7 +65,7 @@ export default {
 <script setup lang="ts">
 import { ControlPlatformIcon, LayersIcon, UsergroupIcon, UserIcon } from 'tdesign-icons-vue-next';
 // echarts.use([LineChart, BarChart, CanvasRenderer]);
-import { MessagePlugin } from 'tdesign-vue-next';
+// import { MessagePlugin } from 'tdesign-vue-next';
 import { onMounted, onUnmounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -76,7 +76,7 @@ import Trend from '@/components/trend/index.vue';
 const router = useRouter();
 
 const onCardClick = (route: string) => {
-  MessagePlugin.success(route);
+  // MessagePlugin.success(route);
   router.push(route);
 };
 

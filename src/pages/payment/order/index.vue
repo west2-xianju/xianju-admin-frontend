@@ -140,6 +140,18 @@ const COLUMNS: PrimaryTableCol<TableRowData>[] = [
     width: 80,
     colKey: 'state',
     align: 'center',
+    //     ['pending', 'paid', 'delivered', 'refunded', 'locked', 'completed']
+    filter: {
+      type: 'single',
+      list: [
+        { label: '待付款', value: 'pending' },
+        { label: '待发货', value: 'paid' },
+        { label: '待收货', value: 'delivered' },
+        { label: '已退款', value: 'refunded' },
+        { label: '已锁定', value: 'locked' },
+        { label: '已完成', value: 'completed' },
+      ],
+    },
   },
   {
     title: '金额',
@@ -204,7 +216,6 @@ const fetchData = async () => {
     ...filterValue.value,
     ...pageValue.value,
     ...sortValue.value,
-    state: 'pending',
   };
   try {
     tableData.value = await getOrderList(queryValue).then((res) => {

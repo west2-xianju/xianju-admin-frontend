@@ -216,7 +216,7 @@ const onChangeWalletState = async (row, op: string) => {
   } catch (e) {
     console.log(e);
   } finally {
-    MessagePlugin.info('审核货物成功');
+    MessagePlugin.info('修改成功');
   }
 };
 
