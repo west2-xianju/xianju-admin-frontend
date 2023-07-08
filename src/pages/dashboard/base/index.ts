@@ -309,7 +309,7 @@ export function getLineChartDataSet({
  * @returns {*}
  */
 export function getPieChartDataSet({
-  statsData = [],
+  statsData,
   textColor,
   placeholderColor,
   containerColor,

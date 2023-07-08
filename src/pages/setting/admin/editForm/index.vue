@@ -94,7 +94,7 @@ const route = useRoute();
 onMounted(() => {
   console.log(route.query);
   formData.value = { ...route.query };
-  formData.value.user_id = route.query.uid;
+  formData.value.admin_id = route.query.uid;
 });
 const onSubmit = async ({ validateResult }) => {
   if (validateResult === true) {

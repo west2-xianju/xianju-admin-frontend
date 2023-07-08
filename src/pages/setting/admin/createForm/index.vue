@@ -68,12 +68,12 @@ const FORM_RULES: Record<string, FormRule[]> = {
   password: [{ required: false, message: '请输入密码', type: 'error' }],
 };
 interface FormData {
-  admin_id?: any;
+  admin_id?: string;
   username?: string;
   level?: string;
   password?: string;
 }
-const formData = ref<FormData>({});
+const formData = ref<FormData>();
 
 const onReset = () => {
   MessagePlugin.warning('取消新建');
